@@ -1,15 +1,10 @@
 import { randomIntFromRange, randomVelocity, randomColor, distance } from './utils.js';
 
-const game = document.querySelector('#game');
 const canvas = document.querySelector('canvas');
 const c = canvas.getContext('2d');
-c.font = '16px Arial';
-c.fillStyle = 'white';
 
-const gameWidth = game.clientWidth;
-const gameHeight = game.clientHeight;
-canvas.width = gameWidth;
-canvas.height = gameHeight;
+canvas.width = document.querySelector('#game').clientWidth;
+canvas.height = document.querySelector('#game').clientHeight;
 
 const mouse = {
    x: 0,
@@ -56,8 +51,8 @@ addEventListener('mousemove', (e) => {
 });
 
 addEventListener('resize', () => {
-   canvas.width = gameWidth;
-   canvas.height = gameHeight;
+   canvas.width = document.querySelector('#game').clientWidth;
+   canvas.height = document.querySelector('#game').clientHeight;
 
    init();
 });
@@ -80,10 +75,10 @@ class Particle {
       this.x = x;
       this.y = y;
       this.velocity = {
-         //  x: randomVelocity(1.5, 2),
-         //  y: randomVelocity(1.5, 2),
-         x: 0,
-         y: 0,
+          x: randomVelocity(1.5, 2),
+          y: randomVelocity(1.5, 2),
+        //  x: 0,
+        //  y: 0,
       };
       this.radius = radius;
       this.color = color;
@@ -100,7 +95,7 @@ class Particle {
       c.fillStyle = this.color;
       c.fill();
       c.globalAlpha = 1;
-      c.strokeStyle = this.color;
+      c.strokeStyle = 'black';
       c.stroke();
       c.closePath();
    }
@@ -110,30 +105,24 @@ class Particle {
       // walls collision detection
       if (
          this.x - this.radius + this.velocity.x < 0 ||
-         this.x + this.radius + this.velocity.x > gameWidth
+         this.x + this.radius + this.velocity.x > canvas.width
       ) {
          this.hold = false;
          this.velocity.x = -this.velocity.x;
       }
       if (
          this.y - this.radius + this.velocity.y < 0 ||
-         this.y + this.radius + this.velocity.y > gameHeight
+         this.y + this.radius + this.velocity.y > canvas.height
       ) {
          this.hold = false;
          this.velocity.y = -this.velocity.y;
       }
 
-      // mouse near particles
-      //   if (distance(mouse.x, mouse.y, this.x, this.y) < 150 && this.opacity > 0.8) {
-      //      this.opacity -= 0.02;
-      //   } else if (this.opacity < 1) {
-      //      this.opacity += 0.02;
-      //   }
-
-      if (distance(mouse.x, mouse.y, this.x, this.y) < 150 && this.opacity > 0.8) {
-         this.opacity -= 0.02;
+      //   mouse near particles
+      if (distance(mouse.x, mouse.y, this.x, this.y) < 150 && this.opacity > 0.85) {
+         this.opacity -= 0.01;
       } else if (this.opacity < 1) {
-         this.opacity += 0.02;
+         this.opacity += 0.01;
       }
 
       if (!(distance(mouse.x, mouse.y, this.x, this.y) <= this.radius)) {
