@@ -1,4 +1,5 @@
 import { randomIntFromRange, randomVelocity, randomColor, distance } from './utils.js';
+import * as settings from './settings.js';
 
 const canvas = document.querySelector('canvas');
 const c = canvas.getContext('2d');
@@ -11,18 +12,82 @@ const mouse = {
    y: 0,
 };
 
-let amountOfParticles = 20;
-let maxRadius = 50;
-let minRadius = 50;
+const level = settings.levels['insane'];
+
+// GAME SETTINGS
+const amountOfParticles = level.amountOfParticles;
+const amountOfSmileys = level.amountOfSmileys;
+let guesses = 0;
+let correctGuesses = 0;
+const radius = level.particleRadius;
+const velocity = level.velocity;
 const colors = ['#1fdff4', '#10daf1', '#18dadc'];
+
+// OTHER
+let timeStop = false;
+let revealSmileys = false;
+
+const gameOver = () => {
+   if (correctGuesses >= amountOfSmileys) {
+      console.log(`Congratulations! You guessed all the ${correctGuesses} smileys!`);
+   } else {
+      console.log(`You failed! You guessed ${correctGuesses} of ${amountOfSmileys} smileys.`);
+   }
+};
+
+const nextStage = (stage) => {
+   switch (stage) {
+      case settings.stage.PREPARE: {
+         timeStop = true;
+         revealSmileys = true;
+         setTimeout(() => nextStage(settings.stage.START), 3000);
+         break;
+      }
+      case settings.stage.START: {
+         timeStop = false;
+         revealSmileys = false;
+         setTimeout(() => nextStage(settings.stage.GUESS), 5000);
+         break;
+      }
+      case settings.stage.GUESS: {
+         timeStop = true;
+         revealSmileys = false;
+         break;
+      }
+      case settings.stage.OVER: {
+         timeStop = true;
+         revealSmileys = true;
+         gameOver();
+         break;
+      }
+   }
+};
+
+const onGuess = () => {
+   guesses++;
+   if (guesses >= amountOfSmileys) {
+      particles.forEach((particle) => {
+         if (particle.isChosen && particle.isSmiley) {
+            correctGuesses++;
+         }
+         if (particle.isChosen && !particle.isSmiley) {
+            particle.color = 'red';
+         }
+      });
+      nextStage(settings.stage.OVER);
+   }
+};
 
 // Handler functions
 const onChose = (event) => {
-   for (let i = particles.length - 1; i >= 0; i--) {
-      if (distance(mouse.x, mouse.y, particles[i].x, particles[i].y) <= particles[i].radius) {
-         particles[i].color = 'red';
-         particles[i].isChosen = true;
-         break;
+   if (guesses < amountOfSmileys) {
+      for (let i = particles.length - 1; i >= 0; i--) {
+         if (distance(mouse.x, mouse.y, particles[i].x, particles[i].y) <= particles[i].radius) {
+            particles[i].isChosen = true;
+            particles[i].color = 'yellow';
+            onGuess();
+            break;
+         }
       }
    }
 };
@@ -43,9 +108,9 @@ addEventListener('mousemove', (e) => {
          !particleChosen
       ) {
          particleChosen = true;
-         particles[i].color = 'red';
+         particles[i].mouseOver = true;
       } else if (!particles[i].isChosen) {
-         particles[i].color = particles[i].baseColor;
+         particles[i].mouseOver = false;
       }
    }
 });
@@ -59,32 +124,25 @@ addEventListener('resize', () => {
 
 // addEventListener('contextmenu', (event) => {
 //    event.preventDefault();
-//    for (let i = 0; i < particles.length; i++) {
-//       if (distance(mouse.x, mouse.y, particles[i].x, particles[i].y) <= particles[i].radius) {
-//          particles[i].velocity.x = (particles[i].x - mouse.x) * 0.7;
-//          particles[i].velocity.y = (particles[i].y - mouse.y) * 0.7;
-//       }
-//    }
+//    timeStop = !timeStop;
 // });
 
 addEventListener('click', onChose);
 
 // Objects
 class Particle {
-   constructor(x, y, radius, color) {
+   constructor(x, y, radius, velocity, isSmiley, color) {
       this.x = x;
       this.y = y;
       this.velocity = {
-          x: randomVelocity(1.5, 2),
-          y: randomVelocity(1.5, 2),
-        //  x: 0,
-        //  y: 0,
+         x: randomVelocity(velocity.min, velocity.max),
+         y: randomVelocity(velocity.min, velocity.max),
       };
       this.radius = radius;
-      this.color = color;
       this.baseColor = color;
+      this.color = color;
       this.opacity = 1;
-      this.isCorrect;
+      this.isSmiley = isSmiley;
       this.isChosen = false;
    }
 
@@ -118,30 +176,26 @@ class Particle {
          this.velocity.y = -this.velocity.y;
       }
 
-      //   mouse near particles
+      // mouse near particles
       if (distance(mouse.x, mouse.y, this.x, this.y) < 150 && this.opacity > 0.85) {
          this.opacity -= 0.01;
       } else if (this.opacity < 1) {
          this.opacity += 0.01;
       }
 
-      if (!(distance(mouse.x, mouse.y, this.x, this.y) <= this.radius)) {
-         this.mouseOver = false;
+      if (this.mouseOver && !this.isChosen) {
+         this.color = 'yellow';
+      } else if (!this.isChosen) {
+         this.color = this.baseColor;
       }
 
-      //   if (this.mouseOver) this.color = 'red';
-      //   else this.color = this.baseColor;
-
-      // check stagnancy
-      //   if (this.velocity.x === 0 && this.velocity.y === 0) {
-      //      this.color = 'red';
-      //   } else {
-      //      this.color = this.baseColor;
-      //   }
+      if (revealSmileys && this.isSmiley) this.color = settings.colors.smiley;
 
       // change coordinates by velocity
-      this.x += this.velocity.x;
-      this.y += this.velocity.y;
+      if (!timeStop) {
+         this.x += this.velocity.x;
+         this.y += this.velocity.y;
+      }
    }
 }
 
@@ -152,12 +206,32 @@ function init() {
    particles = [];
 
    for (let i = 0; i < amountOfParticles; i++) {
-      const radius = randomIntFromRange(minRadius, maxRadius);
+      let infiniteLoopDetector = 0;
       let x = randomIntFromRange(radius, canvas.width - radius);
       let y = randomIntFromRange(radius, canvas.height - radius);
-      const color = randomColor(colors);
+      const isSmiley = i < amountOfSmileys;
+      let color = randomColor(colors);
 
-      particles.push(new Particle(x, y, radius, color));
+      if (i !== 0) {
+         for (let j = 0; j < particles.length; j++) {
+            if (distance(x, y, particles[j].x, particles[j].y) < radius + particles[j].radius) {
+               x = randomIntFromRange(radius, canvas.width - radius);
+               y = randomIntFromRange(radius, canvas.height - radius);
+
+               j = -1;
+               infiniteLoopDetector++;
+
+               if (infiniteLoopDetector > 100000) {
+                  amountOfParticles = 2; // tu do zmiany na np 'nowa gra'
+                  infiniteLoopDetector = 0;
+                  alert('Too many particles for current screen size! Decrease the amount!');
+                  init();
+               }
+            }
+         }
+      }
+
+      particles.push(new Particle(x, y, radius, velocity, isSmiley, color));
    }
 }
 
@@ -173,3 +247,4 @@ function animate() {
 
 init();
 animate();
+nextStage(settings.stage.PREPARE);
