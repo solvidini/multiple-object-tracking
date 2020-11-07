@@ -7,7 +7,7 @@ What I used to create this game:
 * JavaScript 
 
 ## Live
-soon
+https://ssazero.github.io/multiple-object-tracking/
 
 ## Author
 Samuel Kędziora
