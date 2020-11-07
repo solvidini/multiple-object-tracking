@@ -34,8 +34,10 @@ const MOT = (props) => {
 
    const gameOver = () => {
       if (correctGuesses >= amountOfSmileys) {
+         new Audio('./static/audio/win.ogg').play();
          console.log(`Congratulations! You guessed all the ${correctGuesses} smileys!`);
       } else {
+         new Audio('./static/audio/lose.ogg').play();
          console.log(`You failed! You guessed ${correctGuesses} of ${amountOfSmileys} smileys.`);
       }
    };
@@ -211,11 +213,11 @@ const MOT = (props) => {
             c.fill();
             c.closePath();
          }
+         // mouth
          if (
             (this.isChosen && this.isSmiley && currentStage === settings.stage.OVER) ||
             (this.isSmiley && currentStage === settings.stage.PREPARE)
          ) {
-            // mouth
             c.beginPath();
             c.fillStyle = '#2b2b2b';
             c.arc(this.x, this.y + this.radius / 6, this.radius / 1.5, 0, Math.PI);
@@ -258,7 +260,7 @@ const MOT = (props) => {
          }
 
          // mouse near particles
-         if (distance(mouse.x, mouse.y, this.x, this.y) < 150 && this.opacity > 0.8) {
+         if (distance(mouse.x, mouse.y, this.x, this.y) < 150 && this.opacity > 0.86) {
             this.opacity -= 0.01;
          } else if (this.opacity < 1) {
             this.opacity += 0.01;

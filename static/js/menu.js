@@ -4,7 +4,7 @@ import game from './game.js';
 const menu = document.querySelector('#menu');
 
 const startLevel = (event, level) => {
-    new Audio('./static/audio/off.ogg').play();
+   new Audio('./static/audio/choose.ogg').play();
    const props = {};
    event.preventDefault();
    menu.classList.add('menu--inactive');
@@ -19,7 +19,7 @@ for (const level in levels) {
    button.classList.add('menu__button');
    button.addEventListener('click', (event) => startLevel(event, levels[level]));
    button.addEventListener('pointerover', () => {
-      new Audio('./static/audio/on.ogg').play();
+      new Audio('./static/audio/hover.ogg').play();
    });
    menu.appendChild(button);
 }

@@ -60,7 +60,7 @@ export const levels = {
          max: 2.2,
       },
       time: {
-         preparation: 1500,
+         preparation: 1800,
          game: 10000,
       },
    },
