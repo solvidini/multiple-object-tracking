@@ -152,8 +152,9 @@ const MOT = (props) => {
       }
 
       draw() {
+         // body
          c.beginPath();
-         c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+         c.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
          c.globalAlpha = this.opacity;
          c.fillStyle = this.color;
          c.fill();
@@ -161,6 +162,81 @@ const MOT = (props) => {
          c.strokeStyle = '#1b1b1b';
          c.stroke();
          c.closePath();
+         if (
+            (this.isChosen || this.isSmiley) &&
+            (currentStage === settings.stage.OVER || currentStage === settings.stage.PREPARE)
+         ) {
+            // eyes
+            c.fillStyle = 'white';
+            c.beginPath();
+            c.arc(
+               this.x - this.radius / 3,
+               this.y - this.radius / 4,
+               this.radius / 4,
+               0,
+               Math.PI * 2
+            );
+            c.fill();
+            c.closePath();
+            c.beginPath();
+            c.arc(
+               this.x + this.radius / 3,
+               this.y - this.radius / 4,
+               this.radius / 4,
+               0,
+               Math.PI * 2
+            );
+            c.fill();
+            c.closePath();
+            // pupils
+            c.fillStyle = '#1b1b1b';
+            c.beginPath();
+            c.arc(
+               this.x - this.radius / 3,
+               this.y - this.radius / 5,
+               this.radius / 8,
+               0,
+               Math.PI * 2
+            );
+            c.fill();
+            c.closePath();
+            c.beginPath();
+            c.arc(
+               this.x + this.radius / 3,
+               this.y - this.radius / 5,
+               this.radius / 8,
+               0,
+               Math.PI * 2
+            );
+            c.fill();
+            c.closePath();
+         }
+         if (
+            (this.isChosen && this.isSmiley && currentStage === settings.stage.OVER) ||
+            (this.isSmiley && currentStage === settings.stage.PREPARE)
+         ) {
+            // mouth
+            c.beginPath();
+            c.fillStyle = '#2b2b2b';
+            c.arc(this.x, this.y + this.radius / 6, this.radius / 1.5, 0, Math.PI);
+            c.fill();
+            c.closePath();
+            c.beginPath();
+            c.fillStyle = 'red';
+            c.arc(this.x, this.y + this.radius / 1.5, this.radius / 4, -0.1, Math.PI + 0.1, true);
+            c.fill();
+            c.closePath();
+         } else if (
+            (currentStage === settings.stage.OVER || currentStage === settings.stage.PREPARE) &&
+            ((this.isChosen && !this.isSmiley) || (!this.isChosen && this.isSmiley))
+         ) {
+            c.beginPath();
+            c.lineWidth = 2;
+            c.arc(this.x, this.y + this.radius / 1.5, this.radius / 1.8, -0.3, Math.PI + 0.3, true);
+            c.stroke();
+            c.lineWidth = 1;
+            c.closePath();
+         }
       }
 
       update() {
@@ -182,7 +258,7 @@ const MOT = (props) => {
          }
 
          // mouse near particles
-         if (distance(mouse.x, mouse.y, this.x, this.y) < 150 && this.opacity > 0.85) {
+         if (distance(mouse.x, mouse.y, this.x, this.y) < 150 && this.opacity > 0.8) {
             this.opacity -= 0.01;
          } else if (this.opacity < 1) {
             this.opacity += 0.01;

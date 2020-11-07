@@ -5,11 +5,11 @@ export const levels = {
       radius: 40,
       velocity: {
          min: 1,
-         max: 1,
+         max: 1.2,
       },
       time: {
-         preparation: 3500,
-         game: 10000,
+         preparation: 2500,
+         game: 9000,
       },
    },
    intermediate: {
@@ -74,8 +74,7 @@ export const stage = {
 };
 
 export const colors = {
-   // basics: ['#1fdff4', '#10daf1', '#18dadc'],
-   basics: ['white'],
+   basics: ['#efdcdc', '#e9efdc', '#dce8ef', '#e9dcef'],
    smiley: '#46e751',
    wrong: '#dc285e',
 };

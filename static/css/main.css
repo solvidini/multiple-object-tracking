@@ -83,6 +83,8 @@ canvas {
    outline: none;
    padding: 2rem;
    border: none;
+
+   transition: all .2s ease;
 }
 
 .menu__button:not(:last-child) {
