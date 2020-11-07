@@ -23,4 +23,10 @@ function distance(x1, y1, x2, y2) {
    return Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2));
 }
 
-export { randomIntFromRange, randomVelocity, randomColor, distance };
+function removeAllChildNodes(parent) {
+   while(parent.firstChild) {
+      parent.removeChild(parent.firstChild);
+   }
+}
+
+export { randomIntFromRange, randomVelocity, randomColor, distance, removeAllChildNodes };

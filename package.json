@@ -1,6 +1,6 @@
 {
   "name": "multiple-object-tracking",
-  "version": "0.7.5",
+  "version": "0.8.12",
   "description": "This is a game to improve your ability to track multiple objects simultaneously.",
   "main": "index.js",
   "scripts": {
