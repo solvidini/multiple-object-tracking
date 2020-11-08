@@ -1,11 +1,12 @@
 export const levels = {
    beginner: {
+      name: 'beginner',
       amountOfParticles: 10,
       amountOfSmileys: 2,
       radius: 40,
       velocity: {
          min: 1,
-         max: 1.2,
+         max: 1.3,
       },
       time: {
          preparation: 2500,
@@ -13,6 +14,7 @@ export const levels = {
       },
    },
    intermediate: {
+      name: 'intermediate',
       amountOfParticles: 12,
       amountOfSmileys: 3,
       radius: 40,
@@ -26,6 +28,7 @@ export const levels = {
       },
    },
    advanced: {
+      name: 'advanced',
       amountOfParticles: 13,
       amountOfSmileys: 4,
       radius: 38,
@@ -39,6 +42,7 @@ export const levels = {
       },
    },
    expert: {
+      name: 'expert',
       amountOfParticles: 15,
       amountOfSmileys: 4,
       radius: 36,
@@ -52,6 +56,7 @@ export const levels = {
       },
    },
    insane: {
+      name: 'insane',
       amountOfParticles: 17,
       amountOfSmileys: 5,
       radius: 35,
@@ -76,5 +81,6 @@ export const stage = {
 export const colors = {
    basics: ['#efdcdc', '#e9efdc', '#dce8ef', '#e9dcef'],
    smiley: '#46e751',
-   wrong: '#dc285e',
+   wrong: '#f63c5e',
+   choose: '#33fffc'
 };

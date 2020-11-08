@@ -1,13 +1,15 @@
 import overlay, { backToMenu } from './overlay.js';
-import { randomIntFromRange, randomVelocity, randomColor, distance } from './utils.js';
+import {
+   randomIntFromRange,
+   randomVelocity,
+   randomColor,
+   distance,
+   removeAllChildNodes,
+} from './utils.js';
 import * as settings from './settings.js';
 
-const MOT = (props) => {
-   overlay();
-   let {
-      level,
-      level: { amountOfParticles, amountOfSmileys },
-   } = props;
+const MOT = (level) => {
+   let { amountOfParticles, amountOfSmileys } = level;
    const game = document.querySelector('#game');
    game.classList.add('game--active');
    const canvas = document.createElement('canvas');
@@ -23,22 +25,52 @@ const MOT = (props) => {
       y: 0,
    };
 
-   // GAME SETTINGS
+   // GAME VARIABLES
    let guesses = 0;
    let correctGuesses = 0;
-
-   // OTHER
    let isGameRunning = false;
    let revealSmileys = false;
    let currentStage = null;
+   let particles = null;
+   let currentTimeout = null;
+
+   // GAME FUNCTIONS
+   const resetGame = () => {
+      new Audio('./static/audio/choose.ogg').play();
+      const stats = document.querySelector('.overlay__stats');
+      const result = document.createTextNode(`${amountOfSmileys}\xa0smileys`);
+      removeAllChildNodes(stats);
+      stats.classList.remove('overlay__stats--win');
+      stats.classList.remove('overlay__stats--lose');
+      stats.appendChild(result);
+
+      guesses = 0;
+      correctGuesses = 0;
+      isGameRunning = false;
+      revealSmileys = false;
+      currentStage = null;
+      particles = null;
+      init();
+   };
 
    const gameOver = () => {
+      const stats = document.querySelector('.overlay__stats');
       if (correctGuesses >= amountOfSmileys) {
          new Audio('./static/audio/win.ogg').play();
-         console.log(`Congratulations! You guessed all the ${correctGuesses} smileys!`);
+         const result = document.createTextNode(
+            `Good job! ${correctGuesses}/${amountOfSmileys}\xa0smileys`
+         );
+         removeAllChildNodes(stats);
+         stats.classList.add('overlay__stats--win');
+         stats.appendChild(result);
       } else {
          new Audio('./static/audio/lose.ogg').play();
-         console.log(`You failed! You guessed ${correctGuesses} of ${amountOfSmileys} smileys.`);
+         const result = document.createTextNode(
+            `You failed! ${correctGuesses}/${amountOfSmileys}\xa0smileys`
+         );
+         removeAllChildNodes(stats);
+         stats.classList.add('overlay__stats--lose');
+         stats.appendChild(result);
       }
    };
 
@@ -48,14 +80,19 @@ const MOT = (props) => {
             currentStage = settings.stage.PREPARE;
             isGameRunning = false;
             revealSmileys = true;
-            setTimeout(() => nextStage(settings.stage.START), level.time.preparation);
+            if (currentTimeout) clearTimeout(currentTimeout);
+            currentTimeout = setTimeout(
+               () => nextStage(settings.stage.START),
+               level.time.preparation
+            );
             break;
          }
          case settings.stage.START: {
             currentStage = settings.stage.START;
             isGameRunning = true;
             revealSmileys = false;
-            setTimeout(() => nextStage(settings.stage.GUESS), level.time.game);
+            if (currentTimeout) clearTimeout(currentTimeout);
+            currentTimeout = setTimeout(() => nextStage(settings.stage.GUESS), level.time.game);
             break;
          }
          case settings.stage.GUESS: {
@@ -82,7 +119,7 @@ const MOT = (props) => {
                correctGuesses++;
             }
             if (particle.isChosen && !particle.isSmiley) {
-               particle.color = 'red';
+               particle.color = settings.colors.wrong;
             }
          });
          nextStage(settings.stage.OVER);
@@ -98,7 +135,7 @@ const MOT = (props) => {
                !particles[i].isChosen
             ) {
                particles[i].isChosen = true;
-               particles[i].color = 'yellow';
+               particles[i].color = settings.colors.choose;
                onGuess();
                break;
             }
@@ -133,7 +170,7 @@ const MOT = (props) => {
    addEventListener('resize', () => {
       canvas.width = document.querySelector('#game').clientWidth;
       canvas.height = document.querySelector('#game').clientHeight;
-      init();
+      resetGame();
    });
 
    // Objects
@@ -267,7 +304,7 @@ const MOT = (props) => {
          }
 
          if (this.mouseOver && !this.isChosen) {
-            this.color = 'yellow';
+            this.color = settings.colors.choose;
          } else if (!this.isChosen) {
             this.color = this.baseColor;
          }
@@ -282,9 +319,7 @@ const MOT = (props) => {
       }
    }
 
-   // Implementation
-   let particles;
-
+   // Initialization
    function init() {
       const { velocity, radius } = level;
       particles = [];
@@ -318,6 +353,7 @@ const MOT = (props) => {
 
          particles.push(new Particle(x, y, radius, velocity, isSmiley, color));
       }
+      nextStage(settings.stage.PREPARE);
    }
 
    // Animation Loop
@@ -330,9 +366,9 @@ const MOT = (props) => {
       });
    }
 
+   overlay(level, resetGame);
    init();
    animate();
-   nextStage(settings.stage.PREPARE);
 };
 
 export default MOT;

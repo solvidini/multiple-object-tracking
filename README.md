@@ -1,5 +1,6 @@
 # Multiple Objects Tracking
-This is a game to improve your ability to track multiple objects simultaneously.
+This is a game to improve your ability to track multiple objects simultaneously! :)
+Find the smileys!
 
 ## Technologies
 What I used to create this game:

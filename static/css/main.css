@@ -8,7 +8,14 @@
 
 :root {
    --color-dark: #1b1b1b;
-   --color-light: #1ffff4;
+   --color-light: #33fffc;
+   --color-smiley: #59f763;
+   --color-wrong: #f7647f;
+}
+
+::selection {
+   background-color: white;
+   color: var(--color-dark);
 }
 
 body {
@@ -27,16 +34,50 @@ canvas {
 .app {
    position: relative;
    width: 100%;
-   height: 100vh;
+   height: 95vh;
    display: flex;
    flex-direction: column;
    justify-content: center;
    align-items: center;
+
+   -webkit-touch-callout: none; /* iOS Safari */
+   -webkit-user-select: none; /* Safari */
+   -khtml-user-select: none; /* Konqueror HTML */
+   -moz-user-select: none; /* Old versions of Firefox */
+   -ms-user-select: none; /* Internet Explorer/Edge */
+   user-select: none;
 }
 
 .info-box {
    padding: 1rem;
-   font-size: .8rem;
+   font-size: 0.8rem;
+}
+
+.footer {
+   width: inherit;
+   text-align: center;
+   padding: 0.5rem 1rem;
+   width: 100%;
+   max-height: 5vh;
+}
+
+.link {
+   color: white;
+   text-decoration: none;
+   font-size: 1rem;
+}
+
+.copyright {
+   color: white;
+   text-decoration: none;
+   font-size: 1rem;
+
+   -webkit-touch-callout: none; /* iOS Safari */
+   -webkit-user-select: none; /* Safari */
+   -khtml-user-select: none; /* Konqueror HTML */
+   -moz-user-select: none; /* Old versions of Firefox */
+   -ms-user-select: none; /* Internet Explorer/Edge */
+   user-select: none;
 }
 
 /* GAME */
@@ -49,14 +90,8 @@ canvas {
    border: 2px solid white;
    border-bottom-left-radius: 1rem;
    border-bottom-right-radius: 1rem;
-}
 
-@media screen and (orientation: portrait) and (max-width: 37.5em) {
-   .game {
-      width: 100%;
-      height: 70%;
-      max-height: 50rem;
-   }
+   animation: appear 0.3s ease;
 }
 
 .game--active {
@@ -66,43 +101,155 @@ canvas {
 /* MENU */
 
 .menu {
+   overflow: hidden;
    display: flex;
    flex-direction: column;
    border: 2px solid white;
    border-radius: 1rem;
-   overflow: hidden;
-}
 
-.menu__button {
-   color: white;
-   font-size: 2rem;
-   letter-spacing: 2px;
-   width: 100%;
-   text-transform: uppercase;
-   background-color: transparent;
-   outline: none;
-   padding: 2rem;
-   border: none;
-
-   transition: all .2s ease;
-}
-
-.menu__button:not(:last-child) {
-   border-bottom: 2px solid white;
-}
-
-.menu__button:hover {
-   background-color: white;
-   color: var(--color-dark);
-   cursor: pointer;
+   animation: appear 0.3s ease;
 }
 
 .menu--inactive {
    display: none;
 }
 
+/* BUTTONS */
+
+.btn {
+   color: white;
+   letter-spacing: 2px;
+   text-transform: uppercase;
+   background-color: transparent;
+   outline: none;
+   border: none;
+
+   transition: all 0.2s ease;
+}
+
+.btn--menu {
+   font-size: 2rem;
+   padding: 2rem;
+   width: 100%;
+}
+
+.btn--overlay {
+   font-size: 1.4rem;
+   padding: 1.6rem;
+   width: 12rem;
+}
+
+.btn--menu:not(:last-child) {
+   border-bottom: 2px solid white;
+}
+
+.btn:hover {
+   background-color: white;
+   color: var(--color-dark);
+   cursor: pointer;
+}
+
 /* OVERLAY */
 
 .overlay {
+   position: relative;
+   width: 45rem;
+   max-width: 100%;
+   overflow: hidden;
+   display: none;
+   border-top: 1px solid white;
+   border-left: 1px solid white;
+   border-right: 1px solid white;
+   border-top-left-radius: 1rem;
+   border-top-right-radius: 1rem;
+
+   animation: appear 0.3s ease;
+}
+
+.overlay--active {
    display: flex;
+}
+
+.overlay__info {
+   flex: 1;
+   padding: 0.5rem;
+   font-size: 1rem;
+
+   display: flex;
+   flex-direction: column;
+}
+
+.overlay__level {
+   flex: 1;
+   width: 100%;
+   text-transform: uppercase;
+   text-align: center;
+   letter-spacing: 5px;
+   font-size: 1.4rem;
+}
+
+.overlay__stats {
+   color: white;
+   flex: 1;
+   width: 100%;
+   text-align: center;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   font-size: 1.2rem;
+}
+
+.overlay__stats--lose {
+   color: var(--color-wrong);
+}
+
+.overlay__stats--win {
+   color: var(--color-smiley);
+}
+
+/* MEDIA QUERIES */
+
+@media screen and (orientation: portrait) and (max-width: 37.5em) {
+   .game {
+      width: 100%;
+      height: 70%;
+      max-height: 50rem;
+      border-radius: 0;
+      border: 1px solid white;
+   }
+
+   .overlay {
+      width: 100%;
+      border-radius: 0;
+      overflow: visible;
+   }
+
+   .btn--overlay {
+      font-size: 1rem;
+      padding: 1.4rem;
+      width: 8em;
+   }
+
+   .overlay__level {
+      position: absolute;
+      left: 50%;
+      top: -35%;
+      transform: translateX(-50%);
+      font-size: 1rem;
+   }
+   
+   .overlay__stats {
+      font-size: 1rem;
+   }
+}
+
+/* ANIMATIONS */
+
+@keyframes appear {
+   0% {
+      transform: scale(0);
+   }
+   100% {
+      transform: scale(1);
+   }
 }
