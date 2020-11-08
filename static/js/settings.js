@@ -51,7 +51,7 @@ export const levels = {
          max: 2,
       },
       time: {
-         preparation: 2000,
+         preparation: 2200,
          game: 10000,
       },
    },
@@ -65,7 +65,7 @@ export const levels = {
          max: 2.2,
       },
       time: {
-         preparation: 1800,
+         preparation: 2200,
          game: 10000,
       },
    },
