@@ -31,7 +31,7 @@ const createRestartButton = (resetGame) => {
    button.appendChild(label);
    button.classList.add('btn');
    button.classList.add('btn--overlay');
-   button.addEventListener('click', resetGame);
+   button.addEventListener('click', () => resetGame());
    button.addEventListener('pointerover', () => {
       new Audio('./static/audio/hover.mp3').play();
    });

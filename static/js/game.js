@@ -35,8 +35,10 @@ const MOT = (level) => {
    let currentTimeout = null;
 
    // GAME FUNCTIONS
-   const resetGame = () => {
-      new Audio('./static/audio/choose.ogg').play();
+   const resetGame = (forced = false) => {
+      if (!forced) {
+         new Audio('./static/audio/choose.ogg').play();
+      }
       const stats = document.querySelector('.overlay__stats');
       const result = document.createTextNode(`${amountOfSmileys}\xa0smileys`);
       removeAllChildNodes(stats);
@@ -170,7 +172,7 @@ const MOT = (level) => {
    addEventListener('resize', () => {
       canvas.width = document.querySelector('#game').clientWidth;
       canvas.height = document.querySelector('#game').clientHeight;
-      resetGame();
+      resetGame(true);
    });
 
    // Objects
