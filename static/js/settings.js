@@ -15,11 +15,11 @@ export const levels = {
    },
    intermediate: {
       name: 'intermediate',
-      amountOfParticles: 12,
+      amountOfParticles: 13,
       amountOfSmileys: 3,
       radius: 40,
       velocity: {
-         min: 1,
+         min: 1.1,
          max: 1.5,
       },
       time: {
@@ -29,11 +29,11 @@ export const levels = {
    },
    advanced: {
       name: 'advanced',
-      amountOfParticles: 13,
+      amountOfParticles: 14,
       amountOfSmileys: 4,
       radius: 38,
       velocity: {
-         min: 1,
+         min: 1.2,
          max: 1.7,
       },
       time: {
