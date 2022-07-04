@@ -24,7 +24,7 @@ function distance(x1, y1, x2, y2) {
 }
 
 function removeAllChildNodes(parent) {
-   while(parent.firstChild) {
+   while (parent.firstChild) {
       parent.removeChild(parent.firstChild);
    }
 }

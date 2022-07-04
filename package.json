@@ -2,19 +2,19 @@
   "name": "multiple-object-tracking",
   "version": "1.0.2",
   "description": "This is a game to improve your ability to track multiple objects simultaneously.",
-  "main": "index.js",
-  "scripts": {
-    "start": "live-server --port=3003 --host=localhost",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "keywords": [
     "Game",
     "Multiple",
     "Objects",
     "Tracking"
   ],
-  "author": "Samuel Kedziora <samukedo@gmail.com>",
   "license": "ISC",
+  "author": "Samuel Kedziora <samuel@front-up.pro>",
+  "main": "index.js",
+  "scripts": {
+    "start": "live-server --port=3003 --host=localhost",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
   "dependencies": {
     "live-server": "^1.2.1"
   }
